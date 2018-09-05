@@ -17,23 +17,17 @@ clean:
 	rm -fr vendor/*
 
 .PHONY: deps
-deps: glide
+deps: dep
 	go get github.com/jteeuwen/go-bindata/...
-	./glide install
+	./dep ensure
 
-glide:
+dep:
 ifeq ($(shell uname),Darwin)
-	curl -fL https://github.com/Masterminds/glide/releases/download/v$(GLIDE_VERSION)/glide-v$(GLIDE_VERSION)-darwin-amd64.zip -o glide.zip
-	unzip glide.zip
-	mv ./darwin-amd64/glide ./glide
-	rm -fr ./darwin-amd64
-	rm ./glide.zip
+	curl -fL https://github.com/golang/dep/releases/download/v0.3.2/dep-darwin-amd64 -o dep
+	chmod +x dep
 else
-	curl -fL https://github.com/Masterminds/glide/releases/download/v$(GLIDE_VERSION)/glide-v$(GLIDE_VERSION)-linux-amd64.zip -o glide.zip
-	unzip glide.zip
-	mv ./linux-amd64/glide ./glide
-	rm -fr ./linux-amd64
-	rm ./glide.zip
+	curl -fL https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 -o dep
+	chmod +x dep
 endif
 
 .PHONY: install
@@ -49,3 +43,4 @@ test:
 .PHONY: generation-test
 generation-test: bin/$(BINARY)
 	script/generation_test.sh
+
